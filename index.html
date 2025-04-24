@@ -52,10 +52,10 @@
 
     <div class="pause screen">
       <h1 class="headerText">Pause</h1>
-      <button tabindex="0" class="titleButton" onclick="document.body.querySelectorAll('.screen').forEach((e) => {e.style.left = '100%'}); gameState.pause = false; gameState.sounds[5].resume(); game.resume();">Resume</button>
-      <button tabindex="0" class="titleButton" onclick="document.body.querySelectorAll('.screen').forEach((e) => {e.style.left = '100%'}); gameState.pause = false; gameState.reset = true; gameState.sounds[5].resume(); game.resume();">Restart</button>
-      <button tabindex="0" class="titleButton" onclick="document.body.querySelector('.options').style.left = '0%';">Options</button>
-      <button tabindex="0" class="titleButton" onclick="document.body.querySelectorAll('.screen').forEach((e) => {e.style.left = '0%'}); gameState.pause = false; gameState.escape = true; game.resume();">Quit</button>
+      <h1 class="titleButton" onclick="document.body.querySelectorAll('.screen').forEach((e) => {e.style.left = '100%'}); gameState.pause = false; gameState.sounds[5].resume(); game.resume();">Resume</h1>
+      <h1 class="titleButton" onclick="document.body.querySelectorAll('.screen').forEach((e) => {e.style.left = '100%'}); gameState.pause = false; gameState.reset = true; gameState.sounds[5].resume(); game.resume();">Restart</h1>
+      <h1 class="titleButton" onclick="document.body.querySelector('.options').style.left = '0%';">Options</h1>
+      <h1 class="titleButton" onclick="document.body.querySelectorAll('.screen').forEach((e) => {e.style.left = '0%'}); gameState.pause = false; gameState.escape = true; game.resume();">Quit</h1>
     </div>
 
     <script src="game/phaser.min.js"></script>
