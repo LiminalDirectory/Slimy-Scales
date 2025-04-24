@@ -54,6 +54,7 @@ const gameState = {
   iframes: false,      //Whether or not the player can be damaged
   timer: 280,          //The current timer value
   dead: 0,             //Scene flag for whether or not the player has died D:
+  death: 0,            //Whether the player ran out of balance or health
   reset: false,        //Is set true when it's time to reset the level
   escape: false,       //Is set to true in some scene files when the player presses esc
   pause: false,        //Is set to true when the game is paused
@@ -79,7 +80,7 @@ function resetGameState() {
   gameState.iframes = false;
   gameState.timer = 280;
   gameState.dead = 0;
-  //gameState.nextScene = 0;
+  gameState.death = 0;
   gameState.reset = false;
   gameState.escape = false;
 };
@@ -273,7 +274,7 @@ function tilt() {
     if ((gameState.theta < 0 && gameState.theta + 0.1 > 0) || (gameState.theta > 0 && gameState.theta - 0.1 < 0)) {gameState.theta = 0;}
   } else if (gameState.timer < 280) {gameState.timer += 1};
   gameState.arm.setAngle(gameState.theta);
-  if (gameState.timer >= 0) {gameState.timeRect.width = gameState.timer} else if (gameState.dead === 0) {gameState.dead = 1};
+  if (gameState.timer >= 0) {gameState.timeRect.width = gameState.timer} else if (gameState.dead === 0) {gameState.dead = 1; gameState.death = 1};
 
   let xBefore = gameState.rightScale.x;
   let yBefore = gameState.rightScale.y;
