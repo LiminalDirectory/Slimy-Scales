@@ -1,0 +1,115 @@
+* {
+  margin: 0px;
+  font-family: yatra, system-ui;
+  font-weight: 400;
+  font-style: normal;
+  user-select: none;
+}
+body {
+  background-color: #0a0e10;
+  overflow: hidden;
+	height: 100%;
+  width: 100%;
+}
+@font-face {
+  font-family: yatra;
+  src: url("assets/misc/YatraOne-Regular.ttf");
+}
+audio {
+  position: absolute;
+  left: -100%;
+  top: -100%;
+}
+.game {
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+}
+img { 
+  image-rendering: optimizeSpeed;             /* STOP SMOOTHING, GIVE ME SPEED  */
+  image-rendering: -moz-crisp-edges;          /* Firefox                        */
+  image-rendering: -o-crisp-edges;            /* Opera                          */
+  image-rendering: -webkit-optimize-contrast; /* Chrome (and eventually Safari) */
+  image-rendering: pixelated;                 /* Universal support since 2021   */
+  image-rendering: optimize-contrast;         /* CSS3 Proposed                  */
+  -ms-interpolation-mode: nearest-neighbor;   /* IE8+                           */
+}
+.screen {
+  background-color: #0a0e10;
+  position: absolute;
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: 100%;
+  width: 100%;
+  left: 0%;
+  top: 0%;
+}
+.titleScreen {
+  overflow-y: hidden;
+  z-index: 10;
+}
+h1, button {
+  color: #fcca46;
+  width: 100%;
+  text-align: center;
+}
+button {
+  background-color: rgba(0, 0, 0, 0);
+  border: none;
+}
+.titleText {
+  font-size: 10vw;
+  top: 5%;
+}
+.titleButton {
+  transition-duration: 1000ms;
+  font-size: 4vw;
+}
+.titleButton:hover {
+  background-color: #6afbe5;
+  text-shadow: none;
+  color: #0a0e10;
+  cursor: pointer;
+  font-size: 5vw;
+}
+.titleScreen>* {
+  text-shadow: -2px 0px #0a0e10, 2px 0px #0a0e10, 0px -2px #0a0e10, 0px 2px #0a0e10;
+}
+.headerText {
+  font-size: 6vw;
+}
+
+.options {
+  z-index: 9;
+}
+.volume {
+  font-size: 3vw;
+  left: 0%;
+}
+.slider {
+  position: relative;
+  border-radius: 5px;
+  height: 100%;
+  width: 90%;
+  left: 5%;
+  top: 0%;
+}
+.options>.titleButton {
+  font-size: 3vw;
+}
+.description {
+  font-size: 2vw;
+}
+
+.howToPlay {
+  overflow-y: hidden;
+  z-index: 8;
+}
+.htpHolder>img:hover {
+  cursor: pointer;
+}
+
+.pause {
+  background-color: rgba(10, 14, 16, 0.8);
+  z-index: 2;
+}
