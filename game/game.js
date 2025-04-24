@@ -165,7 +165,7 @@ function timeEvent(func, length, loop, maxLoop) {
 
 //Pressing tab while the game is being played causes an uninteractable title screen to cover the page, so tab is deactivated while the game is being played and isn't paused
 document.addEventListener('keydown', function(e) {
-  if (e.key === 'Tab' && ((gameState.play && !gameState.pause) || gameState.htp)) {
+  if (e.key === 'Tab' && (gameState.play || gameState.htp)) {
     e.preventDefault(); // Stops tab behavior
   }
 });
@@ -439,9 +439,9 @@ function slimes() {
   cubic (fast to slow): (x/10 - 2)^3 + 0.3x + 11
   cubic (all fast): (x/5 - 2)^3 + 0.2x + 11
   */
-  let maxSlimes = Math.floor(1.1 ** (gameState.slimesKilled / 10) + 0.6 * (gameState.slimesKilled / 5) + 3);
+  let maxSlimes = Math.floor(1.1 ** (gameState.slimesKilled / 5) + 0.6 * (gameState.slimesKilled / 5) + 3);
   if (gameState.slimes.length < maxSlimes && gameState.slimes.length < 12 && gameState.spawnCooldown <= 0) {
-    gameState.spawnCooldown = Math.floor(Math.random() * 6 + 1) * 30;
+    gameState.spawnCooldown = Math.floor(Math.random() * 3 + 1) * 30;
     let slimeX = Math.floor(Math.random() * 1215 + 33);
     if ((gameState.theta <= -30 && slimeX < 400) || (gameState.theta >= 30 && slimeX > 880)) {slimeX = 1280 - slimeX;}
     if (slimeX > gameState.player.x - 50 && slimeX < gameState.player.x + 50) {slimeX < 640 ? slimeX += 150 : slimeX -= 150;}
