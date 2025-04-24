@@ -330,7 +330,11 @@ class Scene1 extends Phaser.Scene {
           document.body.querySelector(".highScore").innerHTML = "High Score: " + gameState.highScore;
         }
         gameState.dead++;
-        gameState.deathText.setText("You Died\nFinal Score: " + gameState.slimesKilled);
+        if (gameState.death === 0) {
+          gameState.deathText.setText("You Died\nFinal Score: " + gameState.slimesKilled);
+        } else {
+          gameState.deathText.setText("The Scale Became Unbalanced\nFinal Score: " + gameState.slimesKilled)
+        }
         timeEvent(() => {gameState.rect.alpha += 0.01}, 20, true, 85);
         let cancel = gameState.emergencyCancel;
         setTimeout(() => {
