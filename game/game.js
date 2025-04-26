@@ -1,5 +1,6 @@
 /*
 Stuff To Implement:
+ + Up punch?
 
 Color Palette:
  + Yellows
@@ -31,6 +32,7 @@ Color Palette:
 //A global object to pass values between functions and files alike
 const gameState = {
   play: false,         //Set to true when the Play Game is pressed on the menu
+  gamemode: 1,         //Which gamemode to load the game in
   htp: false,          //Set to true when the How To Play menu is visible
   musicVol: 0.9,       //How loud the music is
   sfxVol: 0.85,        //How loud sound effects are
@@ -48,11 +50,13 @@ const gameState = {
   slimeQueue: [],      //An array that queues up slimes to be added to the scene
   projectiles: [],     //An array of all of the projectiles in the scene
   slimesKilled: 0,     //How many slimes have been killed
-  highScore: 0,        //The player's high score
+  highScore: 0,        //The player's high score (frantic mode)
+  simpleHighScore: 0,  //The player's high score (simplified mode)
   spawnCooldown: 0,    //How many frames before another slime can be spawned
   hp: 3,               //The player's current hp
   iframes: false,      //Whether or not the player can be damaged
   timer: 280,          //The current timer value
+  slimeTimer: 1200,     //The current slime timer value
   dead: 0,             //Scene flag for whether or not the player has died D:
   death: 0,            //Whether the player ran out of balance or health
   reset: false,        //Is set true when it's time to reset the level
@@ -79,6 +83,7 @@ function resetGameState() {
   gameState.hp = 3;
   gameState.iframes = false;
   gameState.timer = 280;
+  gameState.slimeTimer = 1200;
   gameState.dead = 0;
   gameState.death = 0;
   gameState.reset = false;
@@ -88,7 +93,10 @@ function resetGameState() {
 //Load Local Storage
 if (localStorage.getItem("highScore") != null) {
   gameState.highScore = Number(localStorage.getItem("highScore"));
-  document.body.querySelector(".highScore").innerHTML = "High Score: " + gameState.highScore;
+  document.body.querySelector(".highScore").innerHTML = "Frantic Mode High Score: " + gameState.highScore;
+}
+if (localStorage.getItem("simpleScore") != null) {
+  gameState.simpleHighScore = Number(localStorage.getItem("simpleScore"));
 }
   
 //Config creates the entire scene, you can change backgroundColor and game size here without breaking any other code
@@ -442,10 +450,18 @@ function slimes() {
   */
   let maxSlimes = Math.floor(1.1 ** (gameState.slimesKilled / 5) + 0.6 * (gameState.slimesKilled / 5) + 3);
   if (gameState.slimes.length < maxSlimes && gameState.slimes.length < 12 && gameState.spawnCooldown <= 0) {
-    gameState.spawnCooldown = Math.floor(Math.random() * 3 + 1) * 30;
+    gameState.spawnCooldown = Math.floor(Math.random() * 7 + 3) * 10;
     let slimeX = Math.floor(Math.random() * 1215 + 33);
     if ((gameState.theta <= -30 && slimeX < 400) || (gameState.theta >= 30 && slimeX > 880)) {slimeX = 1280 - slimeX;}
-    if (slimeX > gameState.player.x - 50 && slimeX < gameState.player.x + 50) {slimeX < 640 ? slimeX += 150 : slimeX -= 150;}
+    if (slimeX > gameState.player.x - 100 && slimeX < gameState.player.x + 100) {
+      if (slimeX < 640 && slimeX > gameState.player.x) {
+        slimeX += 250;
+      } else if (slimeX > 640 && slimeX < gameState.player.x) {
+        slimeX -= 250;
+      } else {
+        slimeX < 640 ? slimeX += 640 : slimeX -= 640;
+      };
+    }
     if (gameState.slimeQueue.length === 0) {
       let arr = [];
       if (maxSlimes >= 8) {
@@ -480,4 +496,15 @@ function slimes() {
     }
     gameState.addSlime(slimeX, gameState.slimeQueue.shift());
   } else {gameState.spawnCooldown--;}
+}
+
+function slimeTimer() {
+  gameState.slimeTimer--;
+  if (gameState.slimeTimer === 0 && gameState.dead === 0) {
+    gameState.dead++;
+    gameState.death = 2;
+  } else if (gameState.slimeTimer > 1200) {
+    gameState.slimeTimer = 1200;
+  }
+  gameState.slimeRect.height = 190 * (gameState.slimeTimer / 1200);
 }
