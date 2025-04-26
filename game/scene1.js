@@ -347,6 +347,7 @@ class Scene1 extends Phaser.Scene {
       if (gameState.dead === 1) {
         gameState.player.anims.stop();
         gameState.slimes.forEach((v) => {v[0].setVelocity(0, 0)});
+        gameState.projectiles.forEach((v) => {v.destroy()});
         if (gameState.slimesKilled > gameState.highScore && gameState.gamemode === 1) {
           gameState.highScore = gameState.slimesKilled;
           localStorage.setItem("highScore", gameState.highScore);
