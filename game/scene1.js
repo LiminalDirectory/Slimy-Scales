@@ -10,6 +10,7 @@ class Scene1 extends Phaser.Scene {
     this.load.image("plate", "assets/sprites/scalePlate.png");
     this.load.image("dangerPlate", "assets/sprites/dangerScale.png");
     this.load.image("time", "assets/sprites/scaleTimer.png");
+    this.load.image("sTime", "assets/sprites/slimeTimer.png");
     this.load.audio("hurt", "assets/misc/hurt.wav");
     this.load.audio("jump", "assets/misc/jump.wav");
     this.load.audio("projectile", "assets/misc/projectile.wav");
@@ -34,9 +35,15 @@ class Scene1 extends Phaser.Scene {
     this.add.rectangle(500, 685, 280, 28, 0xff8a80).setOrigin(0, 0).setDepth(1);
     gameState.timeRect = this.add.rectangle(500, 685, 280, 28, 0xfddc81).setOrigin(0, 0).setDepth(1);
     this.add.image(640, 360, "time").setDepth(2);
+    if (gameState.gamemode === 1) {
+      this.add.rectangle(7, 44, 34, 190, 0xff8a80).setOrigin(0, 0).setDepth(1);
+      gameState.slimeRect = this.add.rectangle(7, 44, 34, 190, 0x6afbe5).setOrigin(0, 0).setDepth(1);
+      this.add.image(640, 360, "sTime").setDepth(2);
+    }
     gameState.leftScale = this.add.image(640, 360, "plate").setDepth(2);
     gameState.rightScale = this.add.image(640, 360, "plate").setDepth(2);
     gameState.rightScale.flipX = true;
+    let arrow = this.add.image(-32, -32, "sheet1").setFrame(32).setDepth(2);
 
     gameState.sounds = [
       this.sound.add("hurt", {volume: gameState.sfxVol}),
@@ -134,6 +141,7 @@ class Scene1 extends Phaser.Scene {
         gameState.slimesKilled++;
         gameState.scoreText.setText(gameState.slimesKilled);
         if (gameState.slimesKilled % 15 === 0) {gameState.slimeQueue.unshift(5)};
+        if (gameState.gamemode === 1) {gameState.slimeTimer += 120;}
       }
     });
 
@@ -145,42 +153,51 @@ class Scene1 extends Phaser.Scene {
     });
 
     gameState.addSlime = function(x, color) {
-      let newSlime = slime.create(x, 0, "sheet1").setDepth(3);
-      newSlime.setCollideWorldBounds(true);
-      if (color === 0) {
-        newSlime.setFrame(16);
-        newSlime.body.setSize(48, 34).setOffset(8, 30);
-        slimeCollider.add(newSlime);
-        gameState.slimes.push([newSlime, 0, 300, 1]);
-      } else if (color === 1) {
-        newSlime.setFrame(18);
-        newSlime.body.setSize(48, 34).setOffset(8, 30);
-        slimeCollider.add(newSlime);
-        gameState.slimes.push([newSlime, 1, 300, 1]);
-      } else if (color === 2) {
-        newSlime.setFrame(20);
-        newSlime.body.setSize(48, 34).setOffset(8, 30);
-        greySlimes.add(newSlime);
-        gameState.slimes.push([newSlime, 2, 300, 1]);
-      } else if (color === 3) {
-        newSlime.setFrame(22);
-        newSlime.body.setSize(48, 26).setOffset(8, 38).setBounceX(1);
-        newSlime.setVelocityX([400, -400][Math.floor(Math.random() * 2)]);
-        lightSlimes.add(newSlime);
-        gameState.slimes.push([newSlime, 3, 0, 1]);
-      } else if (color === 4) {
-        newSlime.setFrame(23);
-        newSlime.body.setSize(32, 28).setOffset(16, 36).setAllowGravity(false);
-        gameState.slimes.push([newSlime, 4, 40, 1]);
-      } else if (color === 5) {
-        newSlime.setFrame(26);
-        newSlime.body.setSize(32, 28).setOffset(16, 36);
-        lightSlimes.add(newSlime);
-        gameState.slimes.push([newSlime, 5, 300, 1]);
-      } else {
-        newSlime.destroy();
-        gameState.slimes.splice(gameState.slimes.length - 1, 1);
-      };
+      arrow.setPosition(x, 64);
+      arrow.setFrame(32 + color);
+      timeEvent(() => {
+        arrow.alpha -= 0.05;
+      }, 25, true, 20);
+      setTimeout(() => {
+        arrow.setPosition(-32, -32);
+        arrow.setAlpha(1);
+        let newSlime = slime.create(x, 0, "sheet1").setDepth(3);
+        newSlime.setCollideWorldBounds(true);
+        if (color === 0) {
+          newSlime.setFrame(16);
+          newSlime.body.setSize(48, 34).setOffset(8, 30);
+          slimeCollider.add(newSlime);
+          gameState.slimes.push([newSlime, 0, 300, 1]);
+        } else if (color === 1) {
+          newSlime.setFrame(18);
+          newSlime.body.setSize(48, 34).setOffset(8, 30);
+          slimeCollider.add(newSlime);
+          gameState.slimes.push([newSlime, 1, 300, 1]);
+        } else if (color === 2) {
+          newSlime.setFrame(20);
+          newSlime.body.setSize(48, 34).setOffset(8, 30);
+          greySlimes.add(newSlime);
+          gameState.slimes.push([newSlime, 2, 300, 1]);
+        } else if (color === 3) {
+          newSlime.setFrame(22);
+          newSlime.body.setSize(48, 26).setOffset(8, 38).setBounceX(1);
+          newSlime.setVelocityX([400, -400][Math.floor(Math.random() * 2)]);
+          lightSlimes.add(newSlime);
+          gameState.slimes.push([newSlime, 3, 0, 1]);
+        } else if (color === 4) {
+          newSlime.setFrame(23);
+          newSlime.body.setSize(32, 28).setOffset(16, 36).setAllowGravity(false);
+          gameState.slimes.push([newSlime, 4, 40, 1]);
+        } else if (color === 5) {
+          newSlime.setFrame(26);
+          newSlime.body.setSize(32, 28).setOffset(16, 36);
+          lightSlimes.add(newSlime);
+          gameState.slimes.push([newSlime, 5, 300, 1]);
+        } else {
+          newSlime.destroy();
+          gameState.slimes.splice(gameState.slimes.length - 1, 1);
+        };
+      }, 500);
     };
 
     gameState.redSlimeProjectile = function(x, y) {
@@ -282,6 +299,9 @@ class Scene1 extends Phaser.Scene {
     this.input.keyboard.on("keydown-Z", function () {gameState.z = true});
     this.input.keyboard.on("keydown-X", function () {gameState.x = true});
     this.input.keyboard.on("keydown-C", function () {gameState.z = true});
+    this.input.keyboard.on("keydown-J", function () {gameState.z = true});
+    this.input.keyboard.on("keydown-K", function () {gameState.x = true});
+    this.input.keyboard.on("keydown-L", function () {gameState.z = true});
     this.input.keyboard.on("keydown-SHIFT", function () {gameState.z = true});
     this.input.keyboard.on("keydown-SPACE", function () {gameState.x = true});
     this.input.keyboard.on("keydown-S", function () {gameState.s = true; gameState.player.body.checkCollision.down = false});
@@ -294,6 +314,9 @@ class Scene1 extends Phaser.Scene {
     this.input.keyboard.on("keyup-Z", function () {gameState.z = false});
     this.input.keyboard.on("keyup-X", function () {gameState.x = false});
     this.input.keyboard.on("keyup-C", function () {gameState.z = false});
+    this.input.keyboard.on("keyup-J", function () {gameState.z = false});
+    this.input.keyboard.on("keyup-K", function () {gameState.x = false});
+    this.input.keyboard.on("keyup-L", function () {gameState.z = false});
     this.input.keyboard.on("keyup-SHIFT", function () {gameState.z = false});
     this.input.keyboard.on("keyup-SPACE", function () {gameState.x = false});
     this.input.keyboard.on("keyup-S", function () {gameState.s = false; if (!gameState.down) {gameState.player.body.checkCollision.down = true}});
@@ -324,16 +347,22 @@ class Scene1 extends Phaser.Scene {
       if (gameState.dead === 1) {
         gameState.player.anims.stop();
         gameState.slimes.forEach((v) => {v[0].setVelocity(0, 0)});
-        if (gameState.slimesKilled > gameState.highScore) {
+        if (gameState.slimesKilled > gameState.highScore && gameState.gamemode === 1) {
           gameState.highScore = gameState.slimesKilled;
           localStorage.setItem("highScore", gameState.highScore);
-          document.body.querySelector(".highScore").innerHTML = "High Score: " + gameState.highScore;
+          document.body.querySelector(".highScore").innerHTML = "Frantic High Score: " + gameState.highScore;
+        } else if (gameState.slimesKilled > gameState.simpleHighScore && gameState.gamemode === 0) {
+          gameState.simpleHighScore = gameState.slimesKilled;
+          localStorage.setItem("simpleScore", gameState.simpleHighScore);
+          document.body.querySelector(".highScore").innerHTML = "Simplified High Score: " + gameState.simpleHighScore;
         }
         gameState.dead++;
         if (gameState.death === 0) {
           gameState.deathText.setText("You Died\nFinal Score: " + gameState.slimesKilled);
-        } else {
+        } else if (gameState.death === 1) {
           gameState.deathText.setText("The Scale Became Unbalanced\nFinal Score: " + gameState.slimesKilled)
+        } else {
+          gameState.deathText.setText("The Slime Timer Ran Out\nFinal Score: " + gameState.slimesKilled)
         }
         timeEvent(() => {gameState.rect.alpha += 0.01}, 20, true, 85);
         let cancel = gameState.emergencyCancel;
@@ -349,6 +378,7 @@ class Scene1 extends Phaser.Scene {
       controls();
       slimes();
       tilt();
+      if (gameState.gamemode === 1) {slimeTimer()};
     }
     if (gameState.replay && gameState.z) {gameState.reset = true}
 
