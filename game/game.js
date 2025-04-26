@@ -56,7 +56,7 @@ const gameState = {
   hp: 3,               //The player's current hp
   iframes: false,      //Whether or not the player can be damaged
   timer: 280,          //The current timer value
-  slimeTimer: 1200,     //The current slime timer value
+  slimeTimer: 900,     //The current slime timer value
   dead: 0,             //Scene flag for whether or not the player has died D:
   death: 0,            //Whether the player ran out of balance or health
   reset: false,        //Is set true when it's time to reset the level
@@ -83,7 +83,7 @@ function resetGameState() {
   gameState.hp = 3;
   gameState.iframes = false;
   gameState.timer = 280;
-  gameState.slimeTimer = 1200;
+  gameState.slimeTimer = 900;
   gameState.dead = 0;
   gameState.death = 0;
   gameState.reset = false;
@@ -503,8 +503,8 @@ function slimeTimer() {
   if (gameState.slimeTimer === 0 && gameState.dead === 0) {
     gameState.dead++;
     gameState.death = 2;
-  } else if (gameState.slimeTimer > 1200) {
-    gameState.slimeTimer = 1200;
+  } else if (gameState.slimeTimer > 900) {
+    gameState.slimeTimer = 900;
   }
-  gameState.slimeRect.height = 190 * (gameState.slimeTimer / 1200);
+  gameState.slimeRect.height = 190 * (gameState.slimeTimer / 900);
 }
