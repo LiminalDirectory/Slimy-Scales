@@ -13,7 +13,7 @@
 
     <div class="game"></div>
 
-    <div class="loadingScreen screen" style="display: flex; justify-content: center; align-items: center; height: 100%; width: 100%; overflow-y: hidden; z-index: 11;"><img style="aspect-ratio: 16/9; object-fit: contain; max-width: 100%; max-height: 100%; height: auto;" src="assets/sprites/loading.png"/></div>
+    <div class="loadingScreen screen" style="display: flex; justify-content: center; align-items: center; max-width: 100vw; max-height: 100vh; height: 100%; width: 100%; overflow-y: hidden; z-index: 11;"><img style="aspect-ratio: 16/9; object-fit: contain; max-width: 100%; max-height: 100%; height: auto;" src="assets/sprites/loading.png"/></div>
 
     <div class="titleScreen screen">
       <div style="display: flex; justify-content: center; align-items: center; height: 100%; width: 100%;">
@@ -22,10 +22,11 @@
         <div style="position: absolute; aspect-ratio: 16/9; max-height: 100%; height: auto; width: 100%; z-index: 1;">
           <h1 class="titleText" style="text-shadow: -2px 0px #6afbe5, 2px 0px #6afbe5, 0px -2px #6afbe5, 0px 2px #6afbe5; color: #11232b;">Slimy Scales</h1>
           <h1 class="titleButton" onclick="document.body.querySelectorAll('.screen').forEach((e) => {e.style.left = '100%'}); gameState.sounds[5].play(); gameState.play = true;">Play Game</h1>
+          <h1 class="titleButton" onclick="if (gameState.gamemode === 1) {gameState.gamemode--; this.innerHTML = 'Gamemode: Simplified'; document.body.querySelector('.highScore').innerHTML = 'Simplified Mode High Score: ' + gameState.simpleHighScore} else {gameState.gamemode++; this.innerHTML = 'Gamemode: Frantic'; document.body.querySelector('.highScore').innerHTML = 'Frantic Mode High Score: ' + gameState.highScore}; gameState.reset = true;">Gamemode: Frantic</h1>
           <h1 class="titleButton" onclick="document.body.querySelector('.titleScreen').style.left = '100%';">Options</h1>
           <h1 class="titleButton" onclick="document.body.querySelector('.titleScreen').style.left = '100%'; document.body.querySelector('.options').style.left = '100%'; gameState.htp = true;">How To Play</h1>
           <h1 class="titleButton" onclick="document.body.querySelector('.blackBG').style.zIndex = '2'; document.body.querySelector('.titleBG').style.zIndex = '3';">Admire The Artwork</h1>
-          <h1 class="highScore" style="position: absolute; bottom: 0vh;">High Score: 0</h1>
+          <h1 class="highScore" style="position: absolute; bottom: 0vh;">Frantic Mode High Score: 0</h1>
         </div>
       </div>
     </div>
@@ -41,12 +42,16 @@
       <br>
       <button tabindex="0" class="titleButton" onclick="if (gameState.background) {gameState.background = false; this.innerHTML = 'Arena Background Art: No'; gameState.bg.setAlpha(0)} else {gameState.background = true; this.innerHTML = 'Arena Background Art: Yes'; gameState.bg.setAlpha(1)};">Arena Background Art: Yes</button>
       <h1 class="description">When turned on, a simple greyscale background is displayed while playing. When turned off, a solid grey background is displayed instead.</h1>
+      <br>
+      <button tabindex="0" class="titleButton" onclick="localStorage.removeItem('highScore'); localStorage.removeItem('simpleScore'); gameState.highScore = 0; gameState.simpleHighScore = 0; let str = 'Frantic Mode'; if (gameState.gamemode === 0) {str = 'Simplified Mode'}; document.body.querySelector('.highScore').innerHTML = str + ' High Score: 0';">Reset High Score</button>
+      <h1 class="description">Resets the local storage item where your high score is saved.</h1>
       <button tabindex="0" class="titleButton" style="bottom:0%; position:fixed;" onclick="gameState.play ? document.body.querySelector('.options').style.left = '100%' : document.body.querySelectorAll('.screen').forEach((e) => {e.style.left = '0%'});">Back</button>
     </div>
     
     <div class="howToPlay screen">
-      <div class="htpHolder" style="display: flex; justify-content: center; align-items: center; height: 100%; width: 100%;">
-        <img tabindex="0" onerror="document.body.querySelectorAll('.screen').forEach((e) => {e.style.left = '0%'}); gameState.htp = false;" onfocus="if (gameState.htp) {document.body.querySelectorAll('.screen').forEach((e) => {e.style.left = '0%'}); gameState.htp = false;}" onclick="document.body.querySelectorAll('.screen').forEach((e) => {e.style.left = '0%'}); gameState.htp = false;" style="aspect-ratio: 16/9; object-fit: contain; max-width: 100%; max-height: 100%; height: auto;" src="./assets/sprites/HTP.png" />
+      <div class="htpHolder" style="overflow-y: auto; height: 100%; width: 100%;">
+        <div style="width: 100%; height: calc((100vh - (100vw * (108 / 128))) / 2);"></div>
+        <img tabindex="0" onerror="document.body.querySelectorAll('.screen').forEach((e) => {e.style.left = '0%'}); gameState.htp = false;" onfocus="if (gameState.htp) {document.body.querySelectorAll('.screen').forEach((e) => {e.style.left = '0%'}); gameState.htp = false;}" onclick="document.body.querySelectorAll('.screen').forEach((e) => {e.style.left = '0%'}); gameState.htp = false;" style="object-fit: contain; max-width: 100%; width: 100vw; height: auto;" src="./assets/sprites/HTP.png" />
       </div>
     </div>
 
